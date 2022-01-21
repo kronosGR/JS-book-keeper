@@ -4,6 +4,7 @@
 * CSS
 * Javascript
 * CSS variables
+* localStorage
 
 
 ## Live site
