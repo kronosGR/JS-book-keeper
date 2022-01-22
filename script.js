@@ -23,14 +23,13 @@ window.addEventListener('click', (e) => {
 });
 
 function validate(nameValue, urlValue) {
-  const expression =
-    /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
+  const expression = /(https)?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/g;
   const regex = new RegExp(expression);
   if (!nameValue || !urlValue) {
     alert('Please submit values for both fields');
     return false;
   }
-  if (!value.match(regex)) {
+  if (!urlValue.match(regex)) {
     alert('Please provide a valid web address');
     return false;
   }
@@ -38,6 +37,8 @@ function validate(nameValue, urlValue) {
 }
 
 function buildBookmarks() {
+  bookmarksContainer.textContent = ''
+
   bookmarks.forEach((bookmark) => {
     const { name, url } = bookmark;
     const item = document.createElement('div');
@@ -81,11 +82,21 @@ function fetchBookmarks() {
   buildBookmarks();
 }
 
+function deleteBookmark(url) {
+  bookmarks.forEach((bookmark, i) => {
+    if (bookmark.url === url) {
+      bookmarks.splice(i, 1);
+    }
+  });
+
+  localStorage.setItem('bookmarks', JSON.stringify(bookmarks))
+  fetchBookmarks();
+}
+
 function storeBookmark(e) {
   e.preventDefault();
   const nameValue = websiteNameEl.value;
   let urlValue = websiteUrlEl.value;
-  console.log(nameValue, urlValue);
   if (!urlValue.includes('http://', 'https://')) {
     urlValue = `https://${urlValue}`;
   }
